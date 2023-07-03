@@ -1,3 +1,4 @@
+import json
 #Colors for strings in terminals! :D
 # All of the information was used from https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
 
@@ -74,3 +75,25 @@ class COLOR:
     BRIGHT_HIGHLIGHT_MAGENTA = '\033[105m'
     BRIGHT_HIGHLIGHT_CYAN = '\033[106m'
     BRIGHT_HIGHLIGHT_WHITE = '\033[107m'
+
+    def load_color(Name: str):
+        with open("./Colors.json", 'r') as f:
+            color_list = json.load(f)
+        try:
+            color = next(color for color in color_list if color["Name"] == Name)
+            return color["Color"]
+        except:
+            print(f"{COLOR.YELLOW}No such {Name} color exists :(")
+            return '\033[100m'
+    def add_color(Name: str, Color: str):
+        with open("./Colors.json", 'r') as f:
+            color_list = json.load(f)
+
+        try:
+            color = next(color for color in color_list if color["Name"] == Name)
+            print(f"{COLOR.YELLOW}Color {COLOR.load_color(Name)}{Name}{COLOR.YELLOW} already exists!{COLOR.RESET}")
+        except:
+            color_list.append({"Name": Name, "Color": Color})
+        with open("./Colors.json", 'w') as f:
+            json.dump(color_list, f, indent=4,  separators=(',',': '))
+        return Color
